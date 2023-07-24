@@ -5,12 +5,14 @@ class BaseScreen extends StatelessWidget {
   final String title;
   final Widget child;
   final bool activeDrawer;
+  final bool backButton;
 
   const BaseScreen({
     super.key,
     required this.title,
     required this.child,
     this.activeDrawer = false,
+    this.backButton = true,
   });
 
   @override
@@ -18,6 +20,7 @@ class BaseScreen extends StatelessWidget {
     return Scaffold(
       drawer: activeDrawer ? const SideDrawer() : null,
       appBar: AppBar(
+        automaticallyImplyLeading: backButton,
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
