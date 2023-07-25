@@ -6,6 +6,7 @@ import '../screens/schedule.dart';
 import '../screens/scheduleService.dart';
 import '../screens/scheduleServiceDate.dart';
 import '../screens/login.dart';
+import '../screens/register.dart';
 
 var routes = <String, WidgetBuilder>{
   AppRoutes.home: (ctx) => HomeScreen(),
@@ -13,4 +14,5 @@ var routes = <String, WidgetBuilder>{
   AppRoutes.scheduleService: (ctx) => ScheduleServiceScreen(),
   AppRoutes.scheduleServiceDate: (_) => ScheduleServiceDateScreen(),
   AppRoutes.login: (_) => LoginScreen(),
+  AppRoutes.register: (_) => RegisterScreen(),
 };

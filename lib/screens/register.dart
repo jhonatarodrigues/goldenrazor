@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:golden_razor/routes/app_routes.dart';
 
 import '../components/base_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreen();
+  State<RegisterScreen> createState() => _RegisterScreen();
 }
 
-class _LoginScreen extends State<LoginScreen> {
+class _RegisterScreen extends State<RegisterScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
-      backButton: false,
       activeDrawer: false,
-      title: 'Golden Razor',
+      title: 'Cadastre-se',
       child: Column(
         children: <Widget>[
           Center(
@@ -44,6 +42,34 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: TextField(
+                    obscureText: true,
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Confirme sua senha',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: TextField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'CPF',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: TextField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Telefone',
+                    ),
+                  ),
+                ),
                 TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.blue,
@@ -55,25 +81,6 @@ class _LoginScreen extends State<LoginScreen> {
                   onPressed: () {
                     print(emailController.text);
                     print(passwordController.text);
-                  },
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 15),
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRoutes.register);
                   },
                   child: const Text(
                     'Cadastrar',

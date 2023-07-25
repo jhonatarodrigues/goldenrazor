@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:golden_razor/routes/app_routes.dart';
 
 import './routes/routes.dart';
 
@@ -19,7 +18,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      initialRoute: AppRoutes.login,
       routes: routes,
     );
   }

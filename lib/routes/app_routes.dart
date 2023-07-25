@@ -6,4 +6,5 @@ class AppRoutes {
   static const scheduleServiceDate = '/schedule-service-date';
 
   static const login = '/login';
+  static const register = '/register';
 }
