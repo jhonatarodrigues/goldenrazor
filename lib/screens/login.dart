@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:golden_razor/repository/userRepository.dart';
 import 'package:golden_razor/routes/app_routes.dart';
 
 import '../components/base_screen.dart';
@@ -13,6 +14,16 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreen extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  final UserRepository _user = UserRepository();
+
+  // final response = await _user.getUser();
+
+  void testeGet() async {
+    final response = await _user.getUser();
+
+    print(response);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +66,7 @@ class _LoginScreen extends State<LoginScreen> {
                   onPressed: () {
                     print(emailController.text);
                     print(passwordController.text);
+                    testeGet();
                   },
                   child: const Text(
                     'Login',

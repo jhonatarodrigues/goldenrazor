@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:golden_razor/model/serviceModel.dart';
+import 'package:golden_razor/repository/serviceRepository.dart';
 import 'package:golden_razor/routes/app_routes.dart';
 
 import '../components/base_screen.dart';
 
 class ScheduleScreen extends StatelessWidget {
-  const ScheduleScreen({
+  ScheduleScreen({
     super.key,
   });
 
-  Widget _boxService(BuildContext context) {
+  final ServiceRepository _serviceRepository = ServiceRepository();
+  final List<ServiceModel> list = [
+    ServiceModel(
+        id: 6,
+        title: 'title',
+        price: 5,
+        averageTime: 'averageTime',
+        status: false),
+    ServiceModel(
+        id: 7,
+        title: 'title 2222',
+        price: 5,
+        averageTime: 'averageTime',
+        status: false)
+  ];
+
+  Widget _boxService(BuildContext context, ServiceModel service) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       child: InkWell(
@@ -22,22 +40,23 @@ class ScheduleScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Colors.grey),
           ),
-          child: const Row(
+          child: Row(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Cabelo e barba',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    service.title,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    'R\$ 50,00',
-                    style: TextStyle(fontSize: 12),
+                    'R\$ ${service.price}',
+                    style: const TextStyle(fontSize: 12),
                   ),
                   Text(
-                    'Tempo médio: 25min',
-                    style: TextStyle(fontSize: 12),
+                    service.averageTime,
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ],
               ),
@@ -58,10 +77,47 @@ class ScheduleScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(bottom: 20),
           ),
-          _boxService(context),
-          _boxService(context),
-          _boxService(context),
-          _boxService(context),
+          Expanded(
+            child: FutureBuilder<List<ServiceModel>>(
+              future: _serviceRepository.getServices(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  final error = snapshot.error;
+                  return Center(
+                    child: Text(
+                      "Error: " + error.toString(),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text('No data'),
+                    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      final service = snapshot.data![index];
+
+                      print(service.title);
+
+                      return _boxService(context, service);
+                    },
+                  );
+                }
+
+                final error = snapshot.error;
+                return Center(
+                  child: Text(
+                    "Error: " + error.toString(),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

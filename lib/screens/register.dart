@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:golden_razor/model/userModel.dart';
 
 import '../components/base_screen.dart';
+import '../repository/userRepository.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -10,8 +12,31 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreen extends State<RegisterScreen> {
+  final UserRepository _userRepository = UserRepository();
+
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController cpfController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+
+  Future newRegister() async {
+    if (passwordController.text != confirmPasswordController.text) {
+      print('error password');
+      return;
+    }
+
+    UserModel response = await _userRepository.addUser(
+      nameController.text,
+      emailController.text,
+      phoneController.text,
+      passwordController.text,
+    );
+
+    print('----------');
+    print(response.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +48,15 @@ class _RegisterScreen extends State<RegisterScreen> {
           Center(
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Nome',
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
                   child: TextField(
@@ -46,7 +80,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                   padding: const EdgeInsets.only(bottom: 15),
                   child: TextField(
                     obscureText: true,
-                    controller: passwordController,
+                    controller: confirmPasswordController,
                     decoration: const InputDecoration(
                       labelText: 'Confirme sua senha',
                     ),
@@ -55,7 +89,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
                   child: TextField(
-                    controller: passwordController,
+                    controller: cpfController,
                     decoration: const InputDecoration(
                       labelText: 'CPF',
                     ),
@@ -64,7 +98,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
                   child: TextField(
-                    controller: passwordController,
+                    controller: phoneController,
                     decoration: const InputDecoration(
                       labelText: 'Telefone',
                     ),
@@ -79,8 +113,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                     ),
                   ),
                   onPressed: () {
-                    print(emailController.text);
-                    print(passwordController.text);
+                    newRegister();
                   },
                   child: const Text(
                     'Cadastrar',
