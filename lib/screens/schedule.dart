@@ -3,6 +3,7 @@ import 'package:golden_razor/model/serviceModel.dart';
 import 'package:golden_razor/repository/serviceRepository.dart';
 import 'package:golden_razor/routes/app_routes.dart';
 
+import './Arguments/ScheduleServiceScreenArguments.dart';
 import '../components/base_screen.dart';
 
 class ScheduleScreen extends StatelessWidget {
@@ -11,20 +12,6 @@ class ScheduleScreen extends StatelessWidget {
   });
 
   final ServiceRepository _serviceRepository = ServiceRepository();
-  final List<ServiceModel> list = [
-    ServiceModel(
-        id: 6,
-        title: 'title',
-        price: 5,
-        averageTime: 'averageTime',
-        status: false),
-    ServiceModel(
-        id: 7,
-        title: 'title 2222',
-        price: 5,
-        averageTime: 'averageTime',
-        status: false)
-  ];
 
   Widget _boxService(BuildContext context, ServiceModel service) {
     return Container(
@@ -32,7 +19,10 @@ class ScheduleScreen extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
         onTap: () {
-          Navigator.of(context).pushNamed(AppRoutes.scheduleService);
+          Navigator.of(context).pushNamed(
+            AppRoutes.scheduleService,
+            arguments: ScheduleServiceScreenArguments(service.id),
+          );
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -101,8 +91,6 @@ class ScheduleScreen extends StatelessWidget {
                     itemCount: snapshot.data?.length,
                     itemBuilder: (context, index) {
                       final service = snapshot.data![index];
-
-                      print(service.title);
 
                       return _boxService(context, service);
                     },

@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:golden_razor/model/serviceCollaborator.dart';
+import 'package:golden_razor/repository/serviceCollaboratorRepository.dart';
 
+import './Arguments/ScheduleServiceScreenArguments.dart';
 import '../routes/app_routes.dart';
 import '../components/base_screen.dart';
 
 class ScheduleServiceScreen extends StatelessWidget {
-  const ScheduleServiceScreen({
+  ScheduleServiceScreen({
     super.key,
   });
 
-  Widget _boxService(BuildContext context) {
+  final ServiceCollaboratorRepository _serviceCollaboratorRepository =
+      ServiceCollaboratorRepository();
+
+  Widget _boxService(
+      BuildContext context, ServiceCollaboratorModel serviceCollaborator) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       child: InkWell(
@@ -26,22 +33,22 @@ class ScheduleServiceScreen extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(25),
-                child: const Image(
+                child: Image(
                   width: 50,
                   height: 50,
-                  image: NetworkImage(
-                      'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                  fit: BoxFit.cover,
+                  image: NetworkImage(serviceCollaborator.collaborator.picture),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(left: 10),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nathan',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      serviceCollaborator.collaborator.name,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w700),
                     ),
                     Text(
                       'Proxima agenda disponível: 12 ago',
@@ -59,18 +66,57 @@ class ScheduleServiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments
+        as ScheduleServiceScreenArguments;
+
     return BaseScreen(
       title: 'Serviço de Agendamento',
       child: Column(
         children: [
-          const Text('Escolha o serviço que profissional'),
+          const Text('Escolha o profissional'),
           Container(
             margin: const EdgeInsets.only(bottom: 20),
           ),
-          _boxService(context),
-          _boxService(context),
-          _boxService(context),
-          _boxService(context),
+          Expanded(
+            child: FutureBuilder<List<ServiceCollaboratorModel>>(
+              future: _serviceCollaboratorRepository
+                  .getServiceCollaborator(args.idService),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  final error = snapshot.error;
+                  return Center(
+                    child: Text(
+                      "Error: " + error.toString(),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text('No data'),
+                    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      final data = snapshot.data![index];
+
+                      return _boxService(context, data);
+                    },
+                  );
+                }
+
+                final error = snapshot.error;
+                return Center(
+                  child: Text(
+                    "Error: " + error.toString(),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
