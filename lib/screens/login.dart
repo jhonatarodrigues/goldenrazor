@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:golden_razor/repository/userRepository.dart';
+import 'package:golden_razor/model/storage_item.dart';
+import 'package:golden_razor/model/userModel.dart';
+import 'package:golden_razor/repository/loginRepository.dart';
 import 'package:golden_razor/routes/app_routes.dart';
+import 'package:golden_razor/service/storageService.dart';
 
 import '../components/base_screen.dart';
 
@@ -15,14 +18,28 @@ class _LoginScreen extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  final UserRepository _user = UserRepository();
+  final LoginRepository _loginRepository = LoginRepository();
+  final StorageService _storageService = StorageService();
 
   // final response = await _user.getUser();
 
-  void testeGet() async {
-    final response = await _user.getUser();
+  // void testeGet() async {
+  //   final response = await _user.getUser();
 
-    print(response);
+  //   print(response);
+  // }
+
+  Future login() async {
+    if (passwordController.text == '' || emailController.text == '') {
+      print('adicione email e senha');
+      return;
+    }
+
+    UserModel response = await _loginRepository.login(
+        emailController.text, passwordController.text);
+
+    await _storageService
+        .writeSecureData(StorageItem('user', response.toJson()));
   }
 
   @override
@@ -64,9 +81,7 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                   ),
                   onPressed: () {
-                    print(emailController.text);
-                    print(passwordController.text);
-                    testeGet();
+                    login();
                   },
                   child: const Text(
                     'Login',
